@@ -47,3 +47,8 @@ declare var ResizeObserverSize: {
 interface ResizeObserverCallback {
   (entries: ResizeObserverEntry[], observer: ResizeObserver): void;
 }
+
+interface ConfigOptions {
+  stylesheetWhiteList?: string[];
+  ignoreInlineStyles?: boolean;
+}

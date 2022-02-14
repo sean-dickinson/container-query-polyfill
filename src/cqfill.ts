@@ -11,10 +11,6 @@
  * limitations under the License.
  */
 
-interface ConfigOptions {
-  stylesheetWhiteList?: string[];
-  ignoreInlineStyles?: boolean;
-}
 
 import { transpileStyleSheet } from "./engine.js";
 
