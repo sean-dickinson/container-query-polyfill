@@ -42,7 +42,7 @@ function init(config: ConfigOptions = {}) {
   async function handleLinkedStylesheet(el: HTMLLinkElement) {
     if (el.rel !== "stylesheet") return;
     const srcUrl = new URL(el.href, document.baseURI);
-    if (srcUrl.origin !== location.origin) return;
+    if (srcUrl.origin !== location.origin && !srcUrl.host.includes('cloudfront.net')) return;
     const src = await fetch(srcUrl.toString()).then((r) => r.text());
     const newSrc = transpileStyleSheet(src, srcUrl.toString());
     const blob = new Blob([newSrc], { type: "text/css" });
