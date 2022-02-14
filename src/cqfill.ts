@@ -11,9 +11,14 @@
  * limitations under the License.
  */
 
+interface ConfigOptions {
+  stylesheetWhiteList?: string[];
+  ignoreInlineStyles?: boolean;
+}
+
 import { transpileStyleSheet } from "./engine.js";
 
-function init() {
+function init(config: ConfigOptions = {}) {
   const sheetObserver = new MutationObserver((entries) => {
     for (const entry of entries) {
       for (const addedNode of entry.addedNodes) {
@@ -47,16 +52,21 @@ function init() {
     const blob = new Blob([newSrc], { type: "text/css" });
     el.href = URL.createObjectURL(blob);
   }
-
-  document.querySelectorAll("style").forEach((tag) => handleStyleTag(tag));
+  if(!config.ignoreInlineStyles){
+    document.querySelectorAll("style").forEach((tag) => handleStyleTag(tag));
+  }
   document
     .querySelectorAll("link")
-    .forEach((tag) => handleLinkedStylesheet(tag));
+    .forEach((tag) => {
+      if (config.stylesheetWhiteList.length > 0){
+        for(const stylesheetName of config.stylesheetWhiteList){
+          if(tag.href.includes(stylesheetName)){
+            handleLinkedStylesheet(tag)
+          }
+        }
+      }
+    });
 }
 
-const supportsContainerQueries = "container" in document.documentElement.style;
-if (!supportsContainerQueries) {
-  init();
-}
 
-export { transpileStyleSheet };
+export { init as cqFill };
